@@ -118,7 +118,8 @@ def rsync_folders_for_time(logger):
     fldrs = sorted(get_folders_to_sync(logger))
     logger.info(f'got {len(fldrs)} folders to sync')
     for fldr in fldrs:
-        if time_out < time.time():
+        logger.debug(f'syncing {fldr}')
+        if time_out > time.time():
             try:
                 text = rsync_folder(fldr)
                 bl, fl = check_for_new_files(text)
