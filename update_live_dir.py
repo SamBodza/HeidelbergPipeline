@@ -12,6 +12,9 @@ def get_folders(logger: logging.Logger, src: str, fmt: str):
         text = os.popen(command).read().split()
         logging.debug(f'{text[0:5]}')
         logging.info(f'got {len(text)} folders from dir listing')
+
+        return text
+
     except Exception as e:
         logger.critical(f'failed to get live directory listing')
 
