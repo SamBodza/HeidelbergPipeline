@@ -13,14 +13,14 @@ def get_folders_to_sync(logger):
         query = """
         SELECT folder_name
         FROM heidelberg.live_directory
-        WHERE up_to_date = false
+        WHERE up_to_date = False
         """
         fldrs = connect_single(logger, query, get=True)
 
         if not fldrs:
             query_reset = """
-            ALTER TABLE heidelberg.live_directory
-            SET columns up_to_date False
+            UPDATE heidelberg.live_directory
+            SET up_to_date = False
             """
             connect_single(logger, query_reset)
             get_folders_to_sync(logger)
@@ -69,8 +69,8 @@ def update_file_in_db(logger, fldr, fl):
 
     try:
         query = f"""
-        ALTER TABLE heidelberg.working_files
-        SET COLUMNS up_to_date = false
+        UPDATE heidelberg.working_files
+        SET up_to_date = false
         WHERE folder_name = '{fldr}'
         AND file_name = '{fl}'
         """
@@ -100,8 +100,8 @@ def update_dbs(logger, fldr: str):
     and live dir with new value"""
 
     query = f"""
-    ALTER TABLE heidelberg.live_directory
-    SET columns up_to_date True
+    UPDATE heidelberg.live_directory
+    SET up_to_date True
     WHERE folder_name = '{fldr}'
     """
     connect_single(logger, query)
@@ -110,7 +110,7 @@ def update_dbs(logger, fldr: str):
 def rsync_folders_for_time(logger):
     """rsync as many folders as possible in 3 hours"""
 
-    time_out = time.time() + 60 * 60 * 3
+    time_out = time.time() + 60 #* 60 * 3
     fldrs = sorted(get_folders_to_sync(logger))
     for fldr in fldrs:
         if time_out < time.time():

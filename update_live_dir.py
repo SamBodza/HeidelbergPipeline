@@ -26,7 +26,7 @@ def sql_ise(text):
 def push_folders_to_db(logger: logging.Logger, folders: List[str]):
     """pushes list of directories into postgres db"""
 
-    logger.debug(f"{', '.join([sql_ise(f) for f in folders[0:6] if '.pat' in f])[:-1]}")
+    logger.debug(f"{', '.join([sql_ise(f) for f in folders[0:6] if '.pat' in f])}")
 
     query = f"""
     INSERT INTO heidelberg.tmp_live(folder_name)
