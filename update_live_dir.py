@@ -9,7 +9,7 @@ def get_folders(logger: logging.Logger, src: str, fmt: str):
     command = f'ls {src} | grep {fmt}'
     try:
         text = os.popen(command).read().split()
-        logging.debug(f'{text[0:5]')
+        logging.debug(f'{text[0:5]}')
         logging.info(f'got {len(text)} folders from dir listing')
     except Exception as e:
         logger.critical(f'failed to get live directory listing')
@@ -50,11 +50,9 @@ def update_live_db(logger: logging.Logger, src: str, fmt: str):
     """Updates live directory DB"""
 
     folders = get_folders(logger, src, fmt)
+    logging.info(f'got {len(folders)} folders from dir listing')
     push_folders_to_db(logger, folders)
+    logger.info(f'pushed folders to tmp db')
     push_new_folders(logger)
-
-
-if __name__ == '__main__':
-    path = r''
-    update_live_db(path)
+    logger.info(f'pushed new folders')
 
