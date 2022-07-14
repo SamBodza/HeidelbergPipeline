@@ -12,7 +12,7 @@ def connect_single(logger, query: str, get=False):
     SQLconfig = get_config()['SQL']
 
     try:
-        conn = psycopg2.connect(dbname=SQLconfig['dbname'],
+        conn = psycopg2.connect(dbname=SQLconfig['database'],
                                 host=SQLconfig['host'],
                                 user=SQLconfig['user'],
                                 password=SQLconfig['password'],
