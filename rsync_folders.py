@@ -38,8 +38,9 @@ def rsync_folder(fldr: str):
 
     paths = get_config()['PATHS']
     try:
-        src = os.path.join(paths['src_dir'], fldr)
-        dst = os.path.join(paths['dst_dir'], fldr)
+        src = os.path.join(paths['src_dir'], fldr[0])
+        dst = os.path.join(paths['dst_dir'], fldr[0])
+        logging.debug(f'{src} : {dst}')
         if os.path.exists(src):
             command = f'rsync -arvi {src}/ {dst}/'
             logging.debug(f'found folder {fldr}')
