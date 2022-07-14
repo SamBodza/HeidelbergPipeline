@@ -22,6 +22,8 @@ def connect_single(logger, query: str, get=False):
         if get:
             data = [row for row in cur.fetchall()]
 
+        conn.commit()
+
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'failed to connect to db: {error}')
         raise Exception(f'{error}')
