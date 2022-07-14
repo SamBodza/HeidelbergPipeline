@@ -16,7 +16,7 @@ def connect_single(logger, query: str, get=False):
                                 host=SQLconfig['host'],
                                 user=SQLconfig['user'],
                                 password=SQLconfig['password'],
-                                port=SQLconfig['port'])
+                                port=int(SQLconfig['port']))
         cur = conn.cursor()
         cur.execute(query)
         if get:
