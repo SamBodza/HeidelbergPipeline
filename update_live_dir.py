@@ -22,6 +22,8 @@ def get_folders(logger: logging.Logger, src: str, fmt: str):
 def push_folders_to_db(logger: logging.Logger, folders: List[str]):
     """pushes list of directories into postgres db"""
 
+    logger.debug(f"{', '.join([f'({f})' for f in folders[0:6] if '.pat' in f])[:-1]}")
+
     query = f"""
     INSERT INTO heidelberg.tmp_live(folder_name)
     VALUES {', '.join([f"({f})" for f in folders if '.pat' in f])[:-1]};
