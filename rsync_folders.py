@@ -49,7 +49,7 @@ def rsync_folder(fldr: str):
         else:
             logging.error(f'could nto find {fldr}')
     except Exception as e:
-        logging.error(f'failed to rsync {fldr}')
+        logging.error(f'failed to rsync {fldr} : {e}')
 
 
 def add_file_to_db(logger, fldr, fl):
@@ -122,7 +122,7 @@ def rsync_folders_for_time(logger):
         if time_out > time.time():
             try:
                 text = rsync_folder(fldr)
-                bl, fl = check_for_new_files(text)
+                bl, fl = check_for_new_files(logger, fldr, text)
                 if bl:
                     update_dbs(fldr, fl)
             except Exception as e:
