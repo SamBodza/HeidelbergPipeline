@@ -43,7 +43,7 @@ def push_new_folders(logger):
 
     query = """
     INSERT INTO heidelberg.live_directory(folder_name)
-    (SELECT folder_name
+    (SELECT tmp.folder_name
      FROM heidelberg.tmp_live as tmp
      LEFT JOIN heidelberg.live_directory as live
      ON tmp.folder_name = live.folder_name
