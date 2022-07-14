@@ -16,8 +16,10 @@ def get_folders_to_sync(logger):
         WHERE up_to_date = False
         """
         fldrs = connect_single(logger, query, get=True)
+        logging.info(f'found {len(fldrs)} folders to sync')
 
         if not fldrs:
+            logging.info('All folders up to date, resetting')
             query_reset = """
             UPDATE heidelberg.live_directory
             SET up_to_date = False
@@ -40,6 +42,7 @@ def rsync_folder(fldr: str):
         dst = os.path.join(paths['dst_dir'], fldr)
         if os.path.exists(src):
             command = f'rsync -arvi {src}/ {dst}/'
+            logging.debug(f'found folder {fldr}')
             text = os.popen(command).read().split()
 
             return text
@@ -111,7 +114,9 @@ def rsync_folders_for_time(logger):
     """rsync as many folders as possible in 3 hours"""
 
     time_out = time.time() + 60 #* 60 * 3
+    logger.info(f'set time out for {time_out}')
     fldrs = sorted(get_folders_to_sync(logger))
+    logger.info(f'got {len(fldrs)} folders to sync')
     for fldr in fldrs:
         if time_out < time.time():
             try:
