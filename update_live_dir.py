@@ -19,14 +19,18 @@ def get_folders(logger: logging.Logger, src: str, fmt: str):
         logger.critical(f'failed to get live directory listing')
 
 
+def sql_ise(text):
+    return f"('{text}')"
+
+
 def push_folders_to_db(logger: logging.Logger, folders: List[str]):
     """pushes list of directories into postgres db"""
 
-    logger.debug(f"{', '.join([f'({f})' for f in folders[0:6] if '.pat' in f])[:-1]}")
+    logger.debug(f"{', '.join([sql_ise(f) for f in folders[0:6] if '.pat' in f])[:-1]}")
 
     query = f"""
     INSERT INTO heidelberg.tmp_live(folder_name)
-    VALUES {', '.join([f"({f})" for f in folders if '.pat' in f])[:-1]};
+    VALUES {', '.join([sql_ise(f) for f in folders if '.pat' in f])[:-1]};
     """
     try:
         connect_single(logger, query)
@@ -61,4 +65,3 @@ def update_live_db(logger: logging.Logger, src: str, fmt: str):
     logger.info(f'pushed folders to tmp db')
     push_new_folders(logger)
     logger.info(f'pushed new folders')
-
