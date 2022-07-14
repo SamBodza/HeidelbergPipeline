@@ -7,6 +7,7 @@ from sql_connectors import connect_single
 def get_folders(logger: logging.Logger, src: str, fmt: str):
     """Gets list of directories from src """
     command = f'ls {src} | grep {fmt}'
+    logger.debug(f'command as : {command}')
     try:
         text = os.popen(command).read().split()
         logging.debug(f'{text[0:5]}')
