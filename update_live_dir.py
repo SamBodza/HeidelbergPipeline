@@ -30,7 +30,7 @@ def push_folders_to_db(logger: logging.Logger, folders: List[str]):
 
     query = f"""
     INSERT INTO heidelberg.tmp_live(folder_name)
-    VALUES {', '.join([sql_ise(f) for f in folders if '.pat' in f])[:-1]};
+    VALUES {', '.join([sql_ise(f) for f in folders if '.pat' in f])};
     """
     try:
         connect_single(logger, query)
