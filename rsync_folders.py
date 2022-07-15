@@ -56,6 +56,7 @@ def rsync_folder(fldr: str):
 def add_file_to_db(logger, fldr, fl):
     """Adds new file to db"""
 
+    logging.debug(f'adding {fldr}, {fl} into working files')
     try:
         query = f"""
         INSERT INTO heidelberg.working_files(folder_name, file_name)
@@ -80,6 +81,7 @@ def update_file_in_db(logger, fldr, fl):
         """
 
         connect_single(logger, query)
+        logging.debug(f'updated {fldr}, {fl} to not be up to date ')
 
     except Exception as e:
         logging.critical(f'unable to update file {fl}')
@@ -89,6 +91,7 @@ def check_for_new_files(logger, fldr, text):
     """Check rsync output to see if contains new files"""
     for f in text:
         fl = f.split()
+        logging.debug(f'adding {fldr}, {fl} into working files')
         if 'f+++' in f:
             add_file_to_db(logger, fldr, fl)
             return True, fl
