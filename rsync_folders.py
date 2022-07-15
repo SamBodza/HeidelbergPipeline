@@ -46,6 +46,8 @@ def rsync_folder(fldr: str):
             logging.debug(f'found folder {fldr}')
             text = os.popen(command).read().split()
 
+            print(text)
+
             return text
         else:
             logging.error(f'could nto find {fldr}')
