@@ -50,8 +50,14 @@ def push_new_folders(logger):
      WHERE live.folder_name IS NULL
     ) 
     """
+
+    query_reset = """
+        DELETE FROM heidelberg.tmp_live
+        """
+
     try:
         connect_single(logger, query)
+        connect_single(logger, query_reset)
     except Exception as e:
         logger.critical(f'failed to move folders to live directory table')
 

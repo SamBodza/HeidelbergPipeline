@@ -60,7 +60,7 @@ def add_file_to_db(logger, fldr, fl):
     try:
         query = f"""
         INSERT INTO heidelberg.working_files(folder_name, file_name)
-        VALUES ('{fldr}','{fl}')
+        VALUES ('{fldr[0]}','{fl}')
         """
 
         connect_single(logger, query)
@@ -76,7 +76,7 @@ def update_file_in_db(logger, fldr, fl):
         query = f"""
         UPDATE heidelberg.working_files
         SET up_to_date = false
-        WHERE folder_name = '{fldr}'
+        WHERE folder_name = '{fldr[0]}'
         AND file_name = '{fl}'
         """
 
@@ -90,16 +90,12 @@ def update_file_in_db(logger, fldr, fl):
 def check_for_new_files(logger, fldr, text):
     """Check rsync output to see if contains new files"""
     for f in text:
-        fl = f.split()
+        fl = f.split()[1]
         logging.debug(f'adding {fldr}, {fl} into working files')
         if 'f+++' in f:
-            add_file_to_db(logger, fldr, fl)
-            return True, fl
+            add_file_to_db(logger, fldr[0], fl)
         elif 'f.st' in f:
-            update_file_in_db(logger, fldr, fl)
-            return True, fl
-        else:
-            return False, fl
+            update_file_in_db(logger, fldr[0], fl)
 
 
 def update_dbs(logger, fldr: str):
@@ -109,7 +105,7 @@ def update_dbs(logger, fldr: str):
     query = f"""
     UPDATE heidelberg.live_directory
     SET up_to_date True
-    WHERE folder_name = '{fldr}'
+    WHERE folder_name = '{fldr[0]}'
     """
     connect_single(logger, query)
 
@@ -126,9 +122,11 @@ def rsync_folders_for_time(logger):
         if time_out > time.time():
             try:
                 text = rsync_folder(fldr)
-                bl, fl = check_for_new_files(logger, fldr, text)
-                if bl:
-                    update_dbs(fldr, fl)
+                logger.debug(f'syncing {fldr}')
+                check_for_new_files(logger, fldr, text)
+                logger.debug(f'checking {fldr} for new files')
+                update_dbs(fldr)
+                logger.debug(f'updating liv dir for {fldr}')
             except Exception as e:
                 logging.error(f'unable to sync {fldr}: {e}')
         else:
