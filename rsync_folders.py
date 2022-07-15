@@ -137,7 +137,7 @@ def update_dbs(logger, fldr: str):
 
     query = f"""
     UPDATE heidelberg.live_directory
-    SET up_to_date True
+    SET up_to_date = True
     WHERE folder_name = '{fldr[0]}'
     """
     connect_single(logger, query)
