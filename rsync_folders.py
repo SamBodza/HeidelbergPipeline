@@ -53,6 +53,22 @@ def rsync_folder(fldr: str):
         logging.error(f'failed to rsync {fldr} : {e}')
 
 
+def add_fldr_to_db(logger, fldr):
+    """Adds new fldr to db"""
+
+    logging.debug(f'adding {fldr} into working directory')
+    try:
+        query = f"""
+        INSERT INTO heidelberg.working_directory(folder_name)
+        VALUES ('{fldr[0]}')
+        """
+
+        connect_single(logger, query)
+
+    except Exception as e:
+        logging.critical(f'unable to get folders to sync')
+
+
 def add_file_to_db(logger, fldr, fl):
     """Adds new file to db"""
 
@@ -123,6 +139,8 @@ def rsync_folders_for_time(logger):
             try:
                 text = rsync_folder(fldr)
                 logger.debug(f'syncing {fldr}')
+                add_fldr_to_db(logger, fldr)
+                logger.debug(f'added {fldr} to working dir')
                 check_for_new_files(logger, fldr, text)
                 logger.debug(f'checking {fldr} for new files')
                 update_dbs(fldr)
