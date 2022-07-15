@@ -126,9 +126,9 @@ def check_for_new_files(logger, fldr, text):
         f = text[i]
         logging.debug(f'adding files from {fldr} into working files')
         if 'f+++' in f:
-            add_file_to_db(logger, fldr[0], text[i+1])
+            add_file_to_db(logger, fldr, text[i+1])
         elif 'f.st' in f:
-            update_file_in_db(logger, fldr[0], text[i+1])
+            update_file_in_db(logger, fldr, text[i+1])
 
 
 def update_dbs(logger, fldr: str):
