@@ -123,7 +123,7 @@ def update_file_in_db(logger, fldr, fl):
 def check_for_new_files(logger, fldr, text):
     """Check rsync output to see if contains new files"""
     for i in range(len(text)):
-        f = text(i)
+        f = text[i]
         logging.debug(f'adding files from {fldr} into working files')
         if 'f+++' in f:
             add_file_to_db(logger, fldr[0], text[i+1])
