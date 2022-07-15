@@ -58,9 +58,17 @@ def add_fldr_to_db(logger, fldr):
 
     logging.debug(f'adding {fldr} into working directory')
     try:
+
         query = f"""
-        INSERT INTO heidelberg.working_directory(folder_name)
-        VALUES ('{fldr[0]}')
+        INSERT INTO heidelberg.working_directory
+            (folder_name)
+        SELECT 
+            '{fldr[0]}'
+        WHERE
+            NOT EXISTS (
+                SELECT folder_name 
+                FROM heidelberg.working_directory 
+                WHERE folder_name = '{fldr[0]}');
         """
 
         connect_single(logger, query)
@@ -75,9 +83,18 @@ def add_file_to_db(logger, fldr, fl):
     logging.debug(f'adding {fldr}, {fl} into working files')
     try:
         query = f"""
-        INSERT INTO heidelberg.working_files(folder_name, file_name)
-        VALUES ('{fldr[0]}','{fl}')
-        """
+                INSERT INTO heidelberg.working_directory
+                    (folder_name, file_name)
+                SELECT 
+                    '{fldr[0]}', '{fl}'
+                WHERE
+                    NOT EXISTS (
+                        SELECT folder_name, file_name 
+                        FROM heidelberg.working_directory 
+                        WHERE folder_name = '{fldr[0]}'
+                        AND file_name = '{fl}'
+                        );
+                """
 
         connect_single(logger, query)
 
@@ -143,7 +160,7 @@ def rsync_folders_for_time(logger):
                 logger.debug(f'added {fldr} to working dir')
                 check_for_new_files(logger, fldr, text)
                 logger.debug(f'checking {fldr} for new files')
-                update_dbs(fldr)
+                update_dbs(logger, fldr)
                 logger.debug(f'updating liv dir for {fldr}')
             except Exception as e:
                 logging.error(f'unable to sync {fldr}: {e}')
