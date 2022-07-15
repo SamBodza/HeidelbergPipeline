@@ -83,14 +83,14 @@ def add_file_to_db(logger, fldr, fl):
     logging.debug(f'adding {fldr}, {fl} into working files')
     try:
         query = f"""
-                INSERT INTO heidelberg.working_directory
+                INSERT INTO heidelberg.working_files
                     (folder_name, file_name)
                 SELECT 
                     '{fldr[0]}', '{fl}'
                 WHERE
                     NOT EXISTS (
                         SELECT folder_name, file_name 
-                        FROM heidelberg.working_directory 
+                        FROM heidelberg.working_files 
                         WHERE folder_name = '{fldr[0]}'
                         AND file_name = '{fl}'
                         );
