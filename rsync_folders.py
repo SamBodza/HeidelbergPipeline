@@ -46,8 +46,6 @@ def rsync_folder(fldr: str):
             logging.debug(f'found folder {fldr}')
             text = os.popen(command).read().split()
 
-            print(text)
-
             return text
         else:
             logging.error(f'could nto find {fldr}')
@@ -124,13 +122,13 @@ def update_file_in_db(logger, fldr, fl):
 
 def check_for_new_files(logger, fldr, text):
     """Check rsync output to see if contains new files"""
-    for f in text:
-        fl = f.split()
-        logging.debug(f'adding {fldr}, {fl} into working files')
+    for i in range(len(text)):
+        f = text(i)
+        logging.debug(f'adding files from {fldr} into working files')
         if 'f+++' in f:
-            add_file_to_db(logger, fldr[0], fl)
+            add_file_to_db(logger, fldr[0], text[i+1])
         elif 'f.st' in f:
-            update_file_in_db(logger, fldr[0], fl)
+            update_file_in_db(logger, fldr[0], text[i+1])
 
 
 def update_dbs(logger, fldr: str):
