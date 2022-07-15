@@ -146,7 +146,7 @@ def update_dbs(logger, fldr: str):
 def rsync_folders_for_time(logger):
     """rsync as many folders as possible in 3 hours"""
 
-    time_out = time.time() + 60 #* 60 * 3
+    time_out = time.time() + 60 * 60 #* 3
     logger.info(f'set time out for {time_out}')
     fldrs = sorted(get_folders_to_sync(logger))
     logger.info(f'got {len(fldrs)} folders to sync')
